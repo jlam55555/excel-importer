@@ -69,16 +69,16 @@ public class Main {
           String header = headers.get(index.getAndIncrement());
 
           // FORMATTING: lowercase gender, vip, specialty, language
-          if(header.equals("Gender") || header.equals("Specialty") || header.equals("VIP") || header.equals("Language")) {
+          if(header.equals("gender") || header.equals("specialty") || header.equals("vip") || header.equals("language")) {
             value = value.toLowerCase();
           }
 
           // VALIDATION: checking values for gender, vip
-          if(header.equals("Gender") && !value.equals("male") && !value.equals("female")) {
-            System.err.printf("Error: \"Gender\" field must only have values \"male\" or \"female\" for doctor \"%s\".%n", rowData.get("Name"));
+          if(header.equals("gender") && !value.equals("male") && !value.equals("female")) {
+            System.err.printf("Error: \"Gender\" field must only have values \"male\" or \"female\" for doctor \"%s\".%n", rowData.get("name"));
           }
-          if(header.equals("VIP") && !value.equals("yes") && !value.equals("no")) {
-            System.err.printf("Error: \"VIP\" field must only have values \"yes\" or \"no\" for doctor \"%s\".%n", rowData.get("Name"));
+          if(header.equals("vip") && !value.equals("yes") && !value.equals("no")) {
+            System.err.printf("Error: \"VIP\" field must only have values \"yes\" or \"no\" for doctor \"%s\".%n", rowData.get("name"));
           }
 
           rowData.put(header, value);
@@ -87,13 +87,13 @@ public class Main {
         // VALIDATION: check that place exists
         // get place coordinates
         try {
-          LatLng location = GeocodingApi.geocode(gmaps, (String) rowData.get("Address")).await()[0].geometry.location;
+          LatLng location = GeocodingApi.geocode(gmaps, (String) rowData.get("address")).await()[0].geometry.location;
           Map<String, Double> locationMap = new HashMap<>();
           locationMap.put("lat", location.lat);
           locationMap.put("lng", location.lng);
           rowData.put("coords", locationMap);
         } catch(Exception e) {
-          System.err.printf("Error: No address found for doctor \"%s\" with address \"%s\". Make sure address exists on Google Maps.%n", rowData.get("Name"), rowData.get("Address"));
+          System.err.printf("Error: No address found for doctor \"%s\" with address \"%s\". Make sure address exists on Google Maps.%n", rowData.get("name"), rowData.get("address"));
         }
 
         data.add(rowData);
