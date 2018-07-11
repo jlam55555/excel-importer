@@ -1,5 +1,4 @@
 // apache POI
-import com.google.maps.errors.ApiException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
@@ -13,6 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 // google maps
 import com.google.maps.*;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
 
 // util classes
 import java.text.SimpleDateFormat;
@@ -31,13 +32,13 @@ public class Main {
     // get first sheet of spreadsheet and ignore errors
     Workbook workbook = WorkbookFactory.create(new File(FILE_PATH));
     Sheet sheet = workbook.getSheetAt(0);
-    System.out.printf("%n%n%nThe errors above are from the Apache POI and are well-documented to be safely ignored.%n");
+    System.out.printf("%nThe errors above are from the Apache POI and are well-documented to be safely ignored.%n");
 
     // create data formatter to interpret data
     DataFormatter df = new DataFormatter();
 
     // iterate over rows and columns
-    List<Map<String, String>> data = new ArrayList<>();
+    List<Map<String, Object>> data = new ArrayList<>();
     List<String> headers = new ArrayList();
     AtomicBoolean headersSet = new AtomicBoolean(false);
 
@@ -61,7 +62,7 @@ public class Main {
       }
       // add doctor data on subsequent runs
       else {
-        Map<String, String> rowData = new HashMap<>();
+        Map<String, Object> rowData = new HashMap<>();
         AtomicInteger index = new AtomicInteger(0);
         row.forEach(cell -> {
           String value = df.formatCellValue(cell);
@@ -83,10 +84,14 @@ public class Main {
           rowData.put(header, value);
         });
 
-        // VALIDATION: check that place id exists
-        // get place id
+        // VALIDATION: check that place exists
+        // get place coordinates
         try {
-          rowData.put("Place Id", PlacesApi.findPlaceFromText(gmaps, rowData.get("Address"), FindPlaceFromTextRequest.InputType.TEXT_QUERY).await().candidates[0].placeId);
+          LatLng location = GeocodingApi.geocode(gmaps, (String) rowData.get("Address")).await()[0].geometry.location;
+          Map<String, Double> locationMap = new HashMap<>();
+          locationMap.put("lat", location.lat);
+          locationMap.put("lng", location.lng);
+          rowData.put("coords", locationMap);
         } catch(Exception e) {
           System.err.printf("Error: No address found for doctor \"%s\" with address \"%s\". Make sure address exists on Google Maps.%n", rowData.get("Name"), rowData.get("Address"));
         }
@@ -114,6 +119,9 @@ public class Main {
 
     // print instructions
     System.out.printf("Import from Excel to JSON complete.%nOutput JSON has been written out to path \"%s%s\".%nA backup file has been written to \"%s%s\"%nCopy the output JSON file to the myGUT directory.%n", System.getProperty("user.dir"), outputPath, System.getProperty("user.dir"), backupOutputPath);
+
+    // close context
+    gmaps.shutdown();
 
   }
 
