@@ -55,8 +55,8 @@ public class Main {
 
         // VALIDATION: check that all necessary rows are created (capitalization counts!)
         // Name, Gender, Specialty, VIP, Address, Language
-        if(headers.indexOf("Name") == -1 || headers.indexOf("Gender") == -1 || headers.indexOf("Specialty") == -1 || headers.indexOf("VIP") == -1 || headers.indexOf("Address") == -1 || headers.indexOf("Language") == -1) {
-          System.err.printf("Error: all of the following headers: \"Name, Gender, Specialty, Language, VIP, Address\" must be present (capitalization matters, but order does not).%n");
+        if(headers.indexOf("name") == -1 || headers.indexOf("gender") == -1 || headers.indexOf("specialty") == -1 || headers.indexOf("vip") == -1 || headers.indexOf("address") == -1 || headers.indexOf("language") == -1) {
+          System.err.printf("Error: all of the following headers: \"Name, Gender, Specialty, Language, VIP, Address\" must be present (capitalization and order do not matter, except that name must come first).%n");
         }
 
       }
