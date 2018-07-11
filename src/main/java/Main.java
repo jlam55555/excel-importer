@@ -54,9 +54,9 @@ public class Main {
         row.forEach(cell -> headers.add(df.formatCellValue(cell).toLowerCase()));
 
         // VALIDATION: check that all necessary rows are created (capitalization counts!)
-        // Name, Gender, Specialty, VIP, Address, Language
-        if(headers.indexOf("name") == -1 || headers.indexOf("gender") == -1 || headers.indexOf("specialty") == -1 || headers.indexOf("vip") == -1 || headers.indexOf("address") == -1 || headers.indexOf("language") == -1) {
-          System.err.printf("Error: all of the following headers: \"Name, Gender, Specialty, Language, VIP, Address\" must be present (capitalization and order do not matter, except that name must come first).%n");
+        // Name, Gender, Specialty, VIP, Address, Language, Picture, Description
+        if(headers.indexOf("name") == -1 || headers.indexOf("gender") == -1 || headers.indexOf("specialty") == -1 || headers.indexOf("vip") == -1 || headers.indexOf("address") == -1 || headers.indexOf("language") == -1 || headers.indexOf("picture") == -1 || headers.indexOf("description") == -1) {
+          System.err.printf("Error: all of the following headers: \"Name, Gender, Specialty, Language, VIP, Address, Picture, Description\" must be present (capitalization and order do not matter, except that name must come first).%n");
         }
 
       }
