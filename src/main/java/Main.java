@@ -51,7 +51,7 @@ public class Main {
     sheet.forEach(row -> {
       // set headers on first run
       if(!headersSet.getAndSet(true)) {
-        row.forEach(cell -> headers.add(df.formatCellValue(cell)));
+        row.forEach(cell -> headers.add(df.formatCellValue(cell).toLowerCase()));
 
         // VALIDATION: check that all necessary rows are created (capitalization counts!)
         // Name, Gender, Specialty, VIP, Address, Language
